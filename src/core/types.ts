@@ -25,6 +25,8 @@ export interface WatchRecord extends Selection {
 export interface Settings {
   mode: 'live' | 'demo'; mirror: string; quality: string; autoplay: boolean;
   excludedCountries: string[]; reducedMotion: boolean;
+  /** Address of the user's own sync server. Empty turns sync off. */
+  syncServer: string;
 }
 export interface Comment { id: string; author: string; date: string; text: string; likes: string; indent: number; parentID?:string; avatar?:string }
 export interface Person { name: string; originalName: string; image?: string; birthDate: string; jobs: string[]; filmography: Item[]; careers:Link[] }

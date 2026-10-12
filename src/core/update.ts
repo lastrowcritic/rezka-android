@@ -1,8 +1,5 @@
 // Finds newer app releases published on GitHub.
-/** headers are sent with the APK download, for update servers that need a sign-in. */
-export interface Release { version: string; apk: string; page: string; notes: string; headers?: Record<string, string> }
-/** Finds an update somewhere other than GitHub. undefined means it does not apply, so GitHub is checked instead. */
-export type UpdateSource = (current: string) => Promise<Release | null | undefined>;
+export interface Release { version: string; apk: string; page: string; notes: string }
 
 const parts = (version: string) => version.trim().replace(/^v/i, '').split(/[.+-]/).slice(0, 3).map(part => Number.parseInt(part, 10) || 0);
 

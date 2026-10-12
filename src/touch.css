@@ -239,3 +239,16 @@ html[data-device="touch"] .navigation:focus-within .nav-item span{display:block;
   html[data-device="touch"] .navigation .touch-secondary{display:none}
   html[data-device="touch"] .navigation .touch-more{display:flex}
 }
+html[data-device="touch"] .sync-form{display:grid;gap:14px;max-width:560px}
+html[data-device="touch"] .sync-form label{display:grid;gap:7px;color:#c9bfce;font-size:14px}
+html[data-device="touch"] .sync-form input{width:100%;min-height:48px;padding:12px 14px;border:1px solid #ffffff24;border-radius:10px;background:#ffffff0c;color:#f5f1f5;font-size:16px}
+html[data-device="touch"] .sync-account{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+html[data-device="touch"] .sync-account p,html[data-device="touch"] .sync-status,html[data-device="touch"] .sync-error{font-size:14px;color:#c9bfce}
+html[data-device="touch"] .sync-error{color:#ffb8b8}
+html[data-device="touch"] .sync-form .action-row{gap:10px;flex-wrap:wrap}
+html[data-device="tv"] .sync-form{display:grid;gap:12px;max-width:520px}
+html[data-device="tv"] .sync-form label{display:grid;gap:6px;color:#c9bfce}
+html[data-device="tv"] .sync-form input{min-height:48px;padding:12px 14px;border:1px solid #ffffff24;border-radius:10px;background:#ffffff0c;color:#f5f1f5;font-size:16px}
+html[data-device="tv"] .sync-account{display:flex;align-items:center;gap:18px}
+html[data-device="tv"] .sync-status,html[data-device="tv"] .sync-error{font-size:14px;color:#c9bfce}
+html[data-device="tv"] .sync-error{color:#ffb8b8}

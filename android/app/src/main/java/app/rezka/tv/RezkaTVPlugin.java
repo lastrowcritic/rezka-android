@@ -141,7 +141,6 @@ public class RezkaTVPlugin extends Plugin {
             try{
                 folder.mkdirs();apk.delete();
                 connection=(HttpURLConnection)new URL(address).openConnection();connection.setConnectTimeout(15000);connection.setReadTimeout(30000);connection.setRequestProperty("User-Agent",USER_AGENT);
-                JSObject headers=call.getObject("headers",new JSObject());for(java.util.Iterator<String> keys=headers.keys();keys.hasNext();){String key=keys.next();connection.setRequestProperty(key,headers.getString(key));}
                 if(connection.getResponseCode()!=200)throw new Exception("The update server answered "+connection.getResponseCode()+".");
                 long total=connection.getContentLengthLong(),done=0;int reported=-1;byte[] buffer=new byte[65536];
                 try(InputStream input=connection.getInputStream();var output=new java.io.FileOutputStream(apk)){for(int read;(read=input.read(buffer))>0;){output.write(buffer,0,read);done+=read;int percent=total>0?(int)(done*100/total):-1;if(percent!=reported){reported=percent;JSObject progress=new JSObject();progress.put("progress",percent);notifyListeners("updateProgress",progress);}}}

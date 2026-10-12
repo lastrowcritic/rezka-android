@@ -16,7 +16,7 @@ The layout adapts to each device. Phones and tablets get touch controls, and TVs
   <img src="screenshots/phone-details.jpg" width="19%" alt="Film details on an Android phone">
 </p>
 
-Looking for iPhone? See [rezka-ios](https://github.com/lastrowcritic/rezka-ios).
+Looking for iPhone? See [rezka-ios](https://github.com/lastrowcritic/rezka-ios). Want your history on every device? Host your own [rezka-sync-server](https://github.com/lastrowcritic/rezka-sync-server).
 
 ## Disclaimer
 
@@ -34,9 +34,16 @@ This project is only a client. It does not host, upload, store or distribute any
 - **Download** films and episodes to watch offline.
 - **Hide countries** you are not interested in, across the whole app.
 - **Watchlist**, viewing history and your own video links.
+- **Sync** your history across devices with your own server (optional).
 - **Updates itself.** The app tells you when a new version is published here and installs it in one step.
 
-All of your data stays on your device. The app has no accounts, no analytics and no server of its own.
+All of your data stays on your device. The app has no analytics and no server of its own.
+
+## Sync across devices (optional)
+
+Your history and the position in each episode can follow you between your phone, tablet, TV and iPhone. Sync uses a small server that you host yourself: [rezka-sync-server](https://github.com/lastrowcritic/rezka-sync-server). It is a few PHP files that run on almost any web hosting plan, and its README explains the setup step by step.
+
+Then open **Settings → Sync across devices** in the app, enter your server address and sign in. Sync is off until you do this.
 
 ## Install
 

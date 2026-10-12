@@ -1,7 +1,7 @@
 import type { Item, Selection, Settings, WatchRecord } from './types';
 export interface SavedState { settings: Settings; favorites: Item[]; history: WatchRecord[]; custom: Item[]; audioChoices: Record<string,string> }
 export const defaults: SavedState = {
-  settings: { mode: 'live', mirror: 'https://omnirezka.tv/', quality: '1080p', autoplay: true, excludedCountries: [], reducedMotion: false },
+  settings: { mode: 'live', mirror: 'https://omnirezka.tv/', quality: '1080p', autoplay: true, excludedCountries: [], reducedMotion: false, syncServer: '' },
   favorites: [], history: [], custom: [], audioChoices: {}
 };
 export const STORE_KEY = 'rezka.tv.v1';

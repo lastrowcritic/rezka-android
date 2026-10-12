@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback;
 public class MainActivity extends BridgeActivity {
     @Override public void onCreate(Bundle state) {
         registerPlugin(RezkaTVPlugin.class);
+        registerPlugin(RezkaSyncPlugin.class);
         super.onCreate(state);
         DeviceProfile.configureOrientation(this);
         bridge.getWebView().getSettings().setUserAgentString(bridge.getWebView().getSettings().getUserAgentString()+ (DeviceProfile.isTV(this)?" RezkaDeviceTV":" RezkaDeviceTouch"));
