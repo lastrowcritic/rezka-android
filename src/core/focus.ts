@@ -6,7 +6,7 @@ export function chooseTarget(current:FocusRect,candidates:FocusRect[],direction:
   return candidates.filter(c=>c.id!==current.id).map(c=>{const dx=c.left+c.width/2-cx,dy=c.top+c.height/2-cy,primary=(horizontal?dx:dy)*sign,secondary=Math.abs(horizontal?dy:dx),overlap=horizontal?Math.min(current.top+current.height,c.top+c.height)-Math.max(current.top,c.top):Math.min(current.left+current.width,c.left+c.width)-Math.max(current.left,c.left);return {id:c.id,primary,score:primary+secondary*3+(overlap>0?0:400)};}).filter(c=>c.primary>8).sort((a,b)=>a.score-b.score)[0]?.id;
 }
 export function pivotOffset(top:number,size:number,viewport:number,scroll:number,bias=0){return Math.max(0,scroll+top-Math.max(viewport*.12,(viewport-size)/2)+bias);}
-export function rowNeighbor(ids:string[],current:string,direction:'left'|'right',wrap=true){const index=ids.indexOf(current),next=index+(direction==='right'?1:-1);return ids[next]||(wrap&&ids.length>1?ids[(next+ids.length)%ids.length]:undefined);}
+export function rowNeighbor<T>(ids:T[],current:T,direction:'left'|'right',wrap=true):T|undefined{const index=ids.indexOf(current),next=index+(direction==='right'?1:-1);return ids[next]||(wrap&&ids.length>1?ids[(next+ids.length)%ids.length]:undefined);}
 const remembered=new Map<string,string>();
 const groupSelector='[data-focus-group],.chip-row,.action-row,.keyboard-mode,.keyboard-actions,.tv-keyboard,.episode-track,.people-track,.media-grid,.collection-grid,.history-grid,.genre-track,.shelf-track,.player-actions,.quality-options';
 const groupCache=new WeakMap<HTMLElement,HTMLElement>();
@@ -49,10 +49,11 @@ function align(target:HTMLElement){
     if(Math.abs(track.scrollLeft-left)>1)track.scrollLeft=left;
   }
 }
+function focusElement(target:HTMLElement){movingFocus=true;target.focus({preventScroll:true});movingFocus=false;align(target);}
 export function focus(id?:string){
   if(isTouch)return;
   const root=scope(),target=id?root.querySelector<HTMLElement>(`[data-focus-id="${CSS.escape(id)}"]:not([disabled])`):root.querySelector<HTMLElement>('[data-focus-default]:not([disabled])')||root.querySelector<HTMLElement>('main [data-focus-id]:not([disabled])')||root.querySelector<HTMLElement>('.nav-item[aria-current="page"]')||root.querySelector<HTMLElement>('[data-focus-id]:not([disabled])');
-  if(target){movingFocus=true;target.focus({preventScroll:true});movingFocus=false;align(target);}
+  if(target)focusElement(target);
 }
 export function restoreFocus(id?:string){
   if(isTouch){delete document.documentElement.dataset.restoringFocus;return;}
@@ -88,7 +89,8 @@ export function installRemote(onBack:()=>void){
         if(next){focus(next);return;}
       }
       if(direction==='left'&&index===0&&root===document.querySelector('.app-shell')){focus(root.querySelector<HTMLElement>('.nav-item[aria-current="page"]')?.dataset.focusId||'nav-home');return;}
-      if(row||grid){const next=rowNeighbor(sameRow.map(el=>el.dataset.focusId!),current.dataset.focusId!,direction,group.dataset.focusWrap!=='false');if(next)focus(next);return;}
+      // Step by element, not by id: a repeated focus id would otherwise resolve back to its first copy and trap the row.
+      if(row||grid){const next=rowNeighbor(sameRow,current,direction,group.dataset.focusWrap!=='false');if(next)focusElement(next);return;}
       if(direction==='left')focus(root.querySelector<HTMLElement>('.nav-item[aria-current="page"]')?.dataset.focusId);return;
     }
     const explicit=direction==='down'?group.dataset.focusDown:group.dataset.focusUp;
