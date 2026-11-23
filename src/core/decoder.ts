@@ -1,3 +1,4 @@
+import { t } from './i18n';
 import * as cheerio from 'cheerio';
 import type { Stream, Subtitle } from './types';
 const symbols = ['@','#','!','^','$'];
@@ -19,7 +20,7 @@ export function decode(payload: string): string {
     const decoded = new TextDecoder().decode(Uint8Array.from(atob(value), c => c.charCodeAt(0))).trim();
     if (!decoded.startsWith('[')) throw new Error();
     return decoded;
-  } catch { throw new Error('The video response could not be read. Try another mirror.'); }
+  } catch { throw new Error(t('The video response could not be read. Try another mirror.')); }
 }
 function entries(value: string) {
   return Array.from(value.matchAll(/\[(.*?)\]\s*(https?:\/\/.*?)(?=,\s*\[|$)/gs));
@@ -40,7 +41,7 @@ export function parseStreams(payload: string): Stream[] {
     if (existing) existing.alternatives = [...new Set([...existing.alternatives,...urls])].filter(url=>url!==existing.url);
     else streams.set(quality, { quality, url: urls[0], alternatives: urls.slice(1) });
   }
-  if (!streams.size) throw new Error('No playable video was returned.');
+  if (!streams.size) throw new Error(t('No playable video was returned.'));
   return [...streams.values()].sort((a,b) => (parseInt(b.quality)||0)-(parseInt(a.quality)||0));
 }
 export function parseSubtitles(payload: string, languages: Record<string,string> = {}): Subtitle[] {

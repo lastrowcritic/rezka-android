@@ -1,3 +1,4 @@
+import { t } from './i18n';
 import { isNative, TV } from './native';
 import type { Download, Item } from './types';
 const dbPromise=()=>new Promise<IDBDatabase>((resolve,reject)=>{
@@ -15,16 +16,16 @@ export async function downloads():Promise<Download[]> {
 }
 export async function saveDownload(record:Download,onProgress:(progress:number)=>void) {
   if(isNative){await TV.download(record);return;}
-  if(/\.m3u8(?:\?|$)/i.test(record.url))throw new Error('HLS downloads are available in the TV app. Choose a progressive quality to download in this preview.');
-  const response=await fetch(record.url);if(!response.ok)throw new Error('This video could not be downloaded.');
-  const reader=response.body?.getReader();if(!reader)throw new Error('This browser cannot save this video.');
+  if(/\.m3u8(?:\?|$)/i.test(record.url))throw new Error(t('HLS downloads are available in the TV app. Choose a progressive quality to download in this preview.'));
+  const response=await fetch(record.url);if(!response.ok)throw new Error(t('This video could not be downloaded.'));
+  const reader=response.body?.getReader();if(!reader)throw new Error(t('This browser cannot save this video.'));
   const length=Number(response.headers.get('content-length')),chunks:Uint8Array<ArrayBuffer>[]= [];let received=0;
   while(true){const {value,done}=await reader.read();if(done)break;chunks.push(new Uint8Array(value));received+=value.length;onProgress(length?received/length:0);}
   await transaction('readwrite',s=>s.put({...record,state:'completed',progress:1,blob:new Blob(chunks,{type:response.headers.get('content-type')||'video/mp4'})}));
 }
 export async function removeDownload(id:string) {if(isNative)await TV.removeDownload({id});else{await transaction('readwrite',s=>s.delete(id));const url=localURLs.get(id);if(url)URL.revokeObjectURL(url);localURLs.delete(id);}}
 export async function importFile(file:File):Promise<Item> {
-  const id=`local-${crypto.randomUUID()}`;const item:Item={id,title:file.name.replace(/\.[^.]+$/,''),kind:'movie',genre:'Personal video',synopsis:'Saved on this device.'};
+  const id=`local-${crypto.randomUUID()}`;const item:Item={id,title:file.name.replace(/\.[^.]+$/,''),kind:'movie',genre:t('Personal video'),synopsis:t('Saved on this device.')};
   const record:Download={id,item,selection:{},url:'',headers:{},progress:1,state:'completed'};
   await transaction('readwrite',s=>s.put({...record,blob:file}));return item;
 }

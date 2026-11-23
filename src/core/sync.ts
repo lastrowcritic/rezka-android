@@ -1,3 +1,4 @@
+import { t, translateMessage } from './i18n';
 // Syncs viewing history through a server the user hosts. Sync stays off until its address is set in Settings.
 import { Capacitor, registerPlugin } from '@capacitor/core';
 import type { WatchRecord } from './types';
@@ -18,9 +19,9 @@ export function normalizeSyncServer(value: string) {
   const text = value.trim();
   if (!text) return '';
   let url: URL;
-  try { url = new URL(/^[a-z][a-z\d+.-]*:\/\//i.test(text) ? text : `https://${text}`); } catch { throw new Error('Enter your sync server address, for example https://sync.example.com.'); }
-  if (url.protocol !== 'https:') throw new Error('The sync server address must start with https://.');
-  if (url.username || url.password || url.search || url.hash) throw new Error('Enter only the sync server address, without a query or sign-in details.');
+  try { url = new URL(/^[a-z][a-z\d+.-]*:\/\//i.test(text) ? text : `https://${text}`); } catch { throw new Error(t('Enter your sync server address, for example https://sync.example.com.')); }
+  if (url.protocol !== 'https:') throw new Error(t('The sync server address must start with https://.'));
+  if (url.username || url.password || url.search || url.hash) throw new Error(t('Enter only the sync server address, without a query or sign-in details.'));
   return `${url.origin}${url.pathname.replace(/\/+$/, '')}`;
 }
 
@@ -43,10 +44,10 @@ async function request<T>(server: string, path: string, method: string, data?: u
   if (token) headers.authorization = `Bearer ${token}`;
   let response: Response;
   try { response = await fetch(`${server}${path}`, { method, headers, body: data === undefined ? undefined : JSON.stringify(data) }); }
-  catch { throw new Error('The sync server could not be reached.'); }
+  catch { throw new Error(t('The sync server could not be reached.')); }
   let body: any;
   try { body = await response.json(); } catch { body = {}; }
-  if (!response.ok) throw new Error(typeof body.error === 'string' ? body.error : 'The sync server is temporarily unavailable.');
+  if (!response.ok) throw new Error(typeof body.error === 'string' ? translateMessage(body.error) : t('The sync server is temporarily unavailable.'));
   return body as T;
 }
 

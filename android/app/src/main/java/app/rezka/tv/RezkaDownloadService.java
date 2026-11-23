@@ -12,8 +12,9 @@ import java.util.List;
 public class RezkaDownloadService extends DownloadService {
     private DownloadNotificationHelper notifications;
     public RezkaDownloadService(){super(1001,1000,"rezka-downloads",R.string.download_channel,0);}
+    @Override protected void attachBaseContext(android.content.Context base){super.attachBaseContext(Locales.wrap(base));}
     @Override public void onCreate(){super.onCreate();notifications=new DownloadNotificationHelper(this,"rezka-downloads");}
     @Override protected DownloadManager getDownloadManager(){return OfflineStore.manager(this);}
     @Override protected Scheduler getScheduler(){return null;}
-    @Override protected Notification getForegroundNotification(List<Download> downloads,int requirements){return notifications.buildProgressNotification(this,android.R.drawable.stat_sys_download,null,"Saving videos for your next evening",downloads,requirements);}
+    @Override protected Notification getForegroundNotification(List<Download> downloads,int requirements){return notifications.buildProgressNotification(this,android.R.drawable.stat_sys_download,null,getString(R.string.download_progress),downloads,requirements);}
 }

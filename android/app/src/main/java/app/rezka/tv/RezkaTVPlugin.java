@@ -113,7 +113,7 @@ public class RezkaTVPlugin extends Plugin {
     private void fileResult(PluginCall call,ActivityResult result) {
         if(call==null)return;if(result.getResultCode()!=Activity.RESULT_OK||result.getData()==null||result.getData().getData()==null){call.reject("No video file was selected.");return;}
         Uri uri=result.getData().getData();getContext().getContentResolver().takePersistableUriPermission(uri,Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        String name="Personal video";
+        String name=Locales.wrap(getContext()).getString(R.string.personal_video);
         try(var cursor=getContext().getContentResolver().query(uri,new String[]{android.provider.OpenableColumns.DISPLAY_NAME},null,null,null)){if(cursor!=null&&cursor.moveToFirst())name=cursor.getString(0);}
         JSObject response=new JSObject();response.put("url",uri.toString());response.put("name",name);call.resolve(response);
     }
@@ -152,6 +152,8 @@ public class RezkaTVPlugin extends Plugin {
             }catch(Exception error){apk.delete();call.reject("The update could not be downloaded. "+error.getMessage(),error);}finally{if(connection!=null)connection.disconnect();}
         });
     }
+    /** The interface language, so the player, website check and download notifications match it. */
+    @PluginMethod public void setLanguage(PluginCall call){Locales.save(getContext(),call.getString("language",""));call.resolve();}
     @PluginMethod public void exit(PluginCall call) { call.resolve();getActivity().runOnUiThread(()->getActivity().finish()); }
     @Override protected void handleOnDestroy(){requests.shutdownNow();if(browserSession!=null)browserSession.destroy();}
 }
