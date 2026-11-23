@@ -17,6 +17,7 @@ export const TV = registerPlugin<{
   removeDownload(options:{id:string}): Promise<void>;
   appInfo(): Promise<{version:string;updateRepo:string}>;
   installUpdate(options:{url:string}): Promise<void>;
+  setLanguage(options:{language:string}): Promise<void>;
   addListener(event:'updateProgress',listener:(value:{progress:number})=>void): Promise<{remove():Promise<void>}>;
 }>('RezkaTV');
 export function makeRecord(item: Item, selection: Selection, position=0): WatchRecord {

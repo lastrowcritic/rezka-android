@@ -1,5 +1,8 @@
+import { t } from './i18n';
 import type { Link, Kind } from './types';
 export const kinds = [['','All titles'],['films/','Films'],['series/','Series'],['cartoons/','Animation'],['animation/','Anime']] as const;
+/** The visible name of a content type in the catalogue filters. */
+export function kindLabel(path:string){return ({'':t('All titles'),'films/':t('Films'),'series/':t('Series'),'cartoons/':t('Animation'),'animation/':t('Anime')} as Record<string,string>)[path]||path;}
 const kindRoots:Record<Kind,string>={movie:'films',series:'series',animation:'cartoons',anime:'animation'};
 export function categorySlug(url:string){return url.replace(/^preview:genre:/,'').split(/[?#]/)[0].split('/').filter(Boolean).at(-1)||'';}
 export function categoryRoot(url:string){return url.match(/(?:^|\/)(films|series|cartoons|animation)\//)?.[1]||'';}

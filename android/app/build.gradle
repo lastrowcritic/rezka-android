@@ -7,8 +7,8 @@ android {
         applicationId "app.rezka.tv"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 4
+        versionName "1.2.0"
         // GitHub repository whose releases the app offers as updates. Empty turns the update check off.
         buildConfigField "String", "UPDATE_REPO", '"lastrowcritic/rezka-android"'
         buildConfigField "String", "UPDATE_HOST", '"github.com"'

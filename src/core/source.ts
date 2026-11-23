@@ -1,3 +1,4 @@
+import { t } from './i18n';
 import type { Catalogue, Collection, Item, Selection, Settings, Source } from './types';
 import { VerificationRequired, isChallenge } from './challenge';
 import { isNative, TV } from './native';
@@ -58,14 +59,14 @@ export class ContentSource {
   }
   async ajax(base:string,form:Record<string,string>,page:string) {
     const r=await this.request(new URL(`ajax/get_cdn_series/?t=${Date.now()}`,base).href,form,this.rebase(page,base));
-    const data=JSON.parse(r.text);if(![true,1,'1','true'].includes(data.success))throw new Error(data.message||'This title is unavailable.');return data;
+    const data=JSON.parse(r.text);if(![true,1,'1','true'].includes(data.success))throw new Error(data.message||t('This title is unavailable.'));return data;
   }
   async playback(item:Item,selection:Selection):Promise<Source> {
     if(item.stream)return {streams:[{quality:'Original',url:item.stream,alternatives:[]}],subtitles:[],headers:{}};
     const translators=item.translators?.filter(t=>!t.premium)||[];
     const translator=selection.translator||translators.find(t=>t.selected)?.id||translators[0]?.id;
-    if(!translator||item.translators?.find(t=>t.id===translator)?.premium)throw new Error('Choose an available translation.');
-    if(item.isSeries&&(!selection.season||!selection.episode))throw new Error('Choose a season and episode.');
+    if(!translator||item.translators?.find(t=>t.id===translator)?.premium)throw new Error(t('Choose an available translation.'));
+    if(item.isSeries&&(!selection.season||!selection.episode))throw new Error(t('Choose a season and episode.'));
     return this.withMirror(async base=>{
       const data=await this.ajax(base,{id:item.rezkaID||item.id,translator_id:translator,season:selection.season||'1',episode:selection.episode||'1',action:item.isSeries?'get_stream':'get_movie'},item.page!);
       const {parseStreams,parseSubtitles}=await import('./decoder');
@@ -86,18 +87,18 @@ export class ContentSource {
       for(let page=1;page<=100;page++){
         const response=await this.request(catalogueURL(new URL('collections/',base).href,page));
         const data=parseCollectionPage(response.text,response.url,page),fresh=data.items.filter(item=>!seen.has(new URL(item.url).pathname));
-        if(!fresh.length&&data.hasNext)throw new Error('Collections could not be loaded completely. Try again.');
+        if(!fresh.length&&data.hasNext)throw new Error(t('Collections could not be loaded completely. Try again.'));
         for(const item of fresh){seen.add(new URL(item.url).pathname);items.push(item);}
-        if(!data.hasNext){if(!items.length)throw new Error('No collections are available on this mirror.');try{localStorage.setItem(cacheKey,JSON.stringify({time:Date.now(),items}));}catch{}return items;}
+        if(!data.hasNext){if(!items.length)throw new Error(t('No collections are available on this mirror.'));try{localStorage.setItem(cacheKey,JSON.stringify({time:Date.now(),items}));}catch{}return items;}
       }
-      throw new Error('The collection list could not be completed. Try another mirror.');
+      throw new Error(t('The collection list could not be completed. Try another mirror.'));
     });
     this.collectionIndexPending=pending;
     try{return await pending;}finally{if(this.collectionIndexPending===pending)this.collectionIndexPending=undefined;}
   }
   async comments(item:Item,page=1) {
     if(!item.page)return {comments:[],hasNext:false};
-    return this.withMirror(async base=>{const r=await this.request(new URL(`ajax/get_comments/?t=${Date.now()}`,base).href,{news_id:item.id,cstart:String(page),type:'0',comment_id:'0',skin:'hdrezka'},this.rebase(item.page!,base));let html=r.text;try{const data=JSON.parse(html);if(data.success===false)throw new Error(data.message||'Comments are unavailable.');html=(data.comments||data.html||'')+(data.navigation||'');}catch(e){if(!html.trim().startsWith('<'))throw e;}const {parseComments}=await import('./parser');return parseComments(html,base);});
+    return this.withMirror(async base=>{const r=await this.request(new URL(`ajax/get_comments/?t=${Date.now()}`,base).href,{news_id:item.id,cstart:String(page),type:'0',comment_id:'0',skin:'hdrezka'},this.rebase(item.page!,base));let html=r.text;try{const data=JSON.parse(html);if(data.success===false)throw new Error(data.message||t('Comments are unavailable.'));html=(data.comments||data.html||'')+(data.navigation||'');}catch(e){if(!html.trim().startsWith('<'))throw e;}const {parseComments}=await import('./parser');return parseComments(html,base);});
   }
   async person(url:string) {return this.withMirror(async base=>{const r=await this.request(this.rebase(url,base));const {parsePerson}=await import('./parser');return parsePerson(r.text,r.url);});}
 }

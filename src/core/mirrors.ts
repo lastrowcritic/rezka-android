@@ -1,14 +1,15 @@
+import { t } from './i18n';
 import { isChallenge, VerificationRequired } from './challenge';
 
 export const mirrorConfiguration='https://raw.githubusercontent.com/lastrowcritic/rezka-android/main/mirrors.json';
 const bundled=['hdrezka-home.tv','hdrezka.ink','hdrezka.loan','hdrezka.tv','rezka-ua.co','rezka.ag'];
 export function normalizeMirror(raw:string):string {
   const value=raw.trim(),url=new URL(value.includes('://')?value:`https://${value}`);
-  if(url.protocol!=='https:'||url.username||url.password||url.port||!url.hostname.includes('.'))throw new Error('Enter a valid secure mirror domain.');
+  if(url.protocol!=='https:'||url.username||url.password||url.port||!url.hostname.includes('.'))throw new Error(t('Enter a valid secure mirror domain.'));
   return `${url.origin}/`;
 }
 export class HTTPFailure extends Error {
-  constructor(public status:number){super(`The content source returned error ${status}. Try another mirror.`);}
+  constructor(public status:number){super(t('The content source returned error {status}. Try another mirror.',{status}));}
 }
 export class InvalidCatalogue extends Error {}
 export function canFailOver(error:unknown) {
@@ -52,7 +53,7 @@ export class MirrorManager {
           if(error instanceof VerificationRequired){this.select(candidate);throw error;}
         }
       }
-      throw new Error('No mirror could be reached. Choose another mirror in Settings.');
+      throw new Error(t('No mirror could be reached. Choose another mirror in Settings.'));
     })().finally(()=>{this.selection=undefined;});
     return this.selection;
   }

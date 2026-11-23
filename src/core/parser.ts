@@ -1,3 +1,4 @@
+import { t } from './i18n';
 import * as cheerio from 'cheerio';
 import { isChallenge, VerificationRequired } from './challenge';
 import { countryCodes } from './countries';
@@ -72,13 +73,13 @@ export function parseSeasons(seasonsHTML: string, episodesHTML=seasonsHTML): Sea
 }
 export function parseDetails(html: string, base: string, item: Item): Item {
   const $=document(html,base), text=(s:string)=>$(s).first().text().trim();
-  const title=text('.b-post__title [itemprop=name]');if(!title)throw new Error('The title page could not be read. Try another mirror.');
+  const title=text('.b-post__title [itemprop=name]');if(!title)throw new Error(t('The title page could not be read. Try another mirror.'));
   const information: Record<string,string>={};
   $('table.b-post__info tr').each((_,n)=>{const row=$(n),label=(row.find('td.l h2').text()||row.find('td.l').text()).trim().replace(/[: ]+$/,'');const value=row.find('td:not(.l)').text().trim();if(label&&value)information[label]=value;});
   const args=html.match(/initCDN(?:Movies|Series)Events\((.*?)\);/s)?.[1].split(',').map(s=>s.trim())||[];
   const initial=args[1]?.match(/^\d+$/)?.[0];
-  const translators=$('.b-translator__item').toArray().flatMap(n=>{const node=$(n),id=node.attr('data-translator_id');return id?[{id,name:node.text().trim()||'Original translation',selected:node.hasClass('active')||id===initial,premium:node.hasClass('b-prem_translator')}]:[];});
-  if(!translators.length&&initial)translators.push({id:initial,name:'Original translation',selected:true,premium:false});
+  const translators=$('.b-translator__item').toArray().flatMap(n=>{const node=$(n),id=node.attr('data-translator_id');return id?[{id,name:node.text().trim()||t('Original translation'),selected:node.hasClass('active')||id===initial,premium:node.hasClass('b-prem_translator')}]:[];});
+  if(!translators.length&&initial)translators.push({id:initial,name:t('Original translation'),selected:true,premium:false});
   const genres=$('[itemprop=genre]').toArray().map(n=>$(n).text().trim());
   const countries=countryCodes(information['Страна']||'');
   const ratings=['imdb','kp'].flatMap(name=>{const node=$(`.b-post__info_rates.${name}`),value=node.find('.bold').first().text().trim();return value?[{name:name==='imdb'?'IMDb':'Kinopoisk',value,url:resolve(node.find('a').attr('href'),base)}]:[];});
@@ -113,6 +114,6 @@ export function parseComments(html: string, base: string): {comments: Comment[];
 }
 export function parsePerson(html: string, base: string): Person {
   const $=document(html,base),name=$('.b-post__title [itemprop=name]').text().trim();
-  if(!name)throw new Error('This person page could not be read.');
+  if(!name)throw new Error(t('This person page could not be read.'));
   return {name,originalName:$('.b-post__title [itemprop=alternativeHeadline]').text().trim(),image:image($,$('.b-post__infotable_left [itemprop=image]'),base),birthDate:$('[itemprop=birthDate]').text().trim(),jobs:$('[itemprop=jobTitle]').toArray().map(n=>$(n).text().trim()),filmography:parseCatalogue(html,base).items,careers:links($,'.b-person__career a',base).filter(link=>new URL(link.url).pathname.startsWith('/person/'))};
 }

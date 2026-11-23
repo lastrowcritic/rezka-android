@@ -1,0 +1,39 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="download_channel">Завантаження відео</string>
+    <string name="download_progress">Зберігаємо відео на наступний вечір</string>
+    <string name="personal_video">Моє відео</string>
+
+    <!-- Player -->
+    <string name="loading_video">Завантаження відео</string>
+    <string name="back_to_title">До опису</string>
+    <string name="playback_settings">Налаштування відтворення</string>
+    <string name="video_quality">Якість відео</string>
+    <string name="audio">Озвучення</string>
+    <string name="subtitles">Субтитри</string>
+    <string name="playback_speed">Швидкість відтворення</string>
+    <string name="done">Готово</string>
+    <string name="back_to_settings">До налаштувань</string>
+    <string name="selected_choice">%1$s, вибрано</string>
+    <string name="off">Вимк.</string>
+    <string name="default_track">За замовчуванням</string>
+    <string name="default_audio">Озвучення за замовчуванням</string>
+    <string name="track_number">Доріжка %1$d</string>
+    <string name="normal_speed">Звичайна</string>
+    <string name="speed_times">×%1$s</string>
+    <string name="time_separator">із</string>
+    <string name="video_open_failed">Не вдалося відкрити відео. %1$s</string>
+    <string name="video_play_failed">Не вдалося відтворити відео. Виберіть іншу якість або дзеркало.</string>
+    <string name="alternate_play_failed">Не вдалося відтворити запасне джерело відео.</string>
+    <string name="quality_play_failed">Не вдалося відтворити цю якість.</string>
+
+    <!-- Website verification -->
+    <string name="continue_check">Продовжити</string>
+    <string name="reload_page">Перезавантажити сторінку</string>
+    <string name="cancel">Скасувати</string>
+    <string name="show_website_check">Показати перевірку сайту</string>
+    <string name="checking_website_access">Перевірка доступу до сайту</string>
+    <string name="connecting_catalogue">Підключення до каталогу</string>
+    <string name="verification_wait">Зачекайте, доки перевіряється доступ до сайту.</string>
+    <string name="verification_waiting">Очікування перевірки сайту. Пройдіть її нижче або перезавантажте сторінку, щоб повторити.</string>
+</resources>

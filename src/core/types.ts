@@ -27,6 +27,8 @@ export interface Settings {
   excludedCountries: string[]; reducedMotion: boolean;
   /** Address of the user's own sync server. Empty turns sync off. */
   syncServer: string;
+  /** Interface language. `system` follows the device language. */
+  language: 'system' | 'en' | 'ru' | 'uk';
 }
 export interface Comment { id: string; author: string; date: string; text: string; likes: string; indent: number; parentID?:string; avatar?:string }
 export interface Person { name: string; originalName: string; image?: string; birthDate: string; jobs: string[]; filmography: Item[]; careers:Link[] }

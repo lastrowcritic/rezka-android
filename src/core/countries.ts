@@ -1,3 +1,4 @@
+import { language, locale } from './i18n';
 export const countryNames: Record<string,string> = {};
 const aliases = new Map<string,string>();
 function normalize(value: string) { return value.trim().normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase(); }
@@ -12,3 +13,18 @@ for (let a=65;a<=90;a++) for(let b=65;b<=90;b++) {
 for (const [name,code] of Object.entries({'США':'US','USA':'US','U.S.A.':'US','United States of America':'US','Россия':'RU','Российская Федерация':'RU','Russia':'RU','СССР':'SU','USSR':'SU','Soviet Union':'SU','Югославия':'YU','Yugoslavia':'YU','Великобритания':'GB','Англия':'GB','UK':'GB','Great Britain':'GB','Южная Корея':'KR','Корея Южная':'KR','Корея (Южная)':'KR','South Korea':'KR','Северная Корея':'KP','North Korea':'KP'})) aliases.set(normalize(name),code);
 countryNames.SU='Soviet Union';countryNames.YU='Yugoslavia';
 export function countryCodes(value: string): string[] { return [...new Set(value.split(/[,;\/\n]/).flatMap(name=>aliases.get(normalize(name))?[aliases.get(normalize(name))!]:[]))]; }
+
+const historicNames: Record<string, Record<string,string>> = {
+  en: { SU: 'Soviet Union', YU: 'Yugoslavia' },
+  ru: { SU: 'СССР', YU: 'Югославия' },
+  uk: { SU: 'СРСР', YU: 'Югославія' },
+};
+const displayNames = new Map<string, Intl.DisplayNames>();
+/** The name of a country in the interface language. */
+export function countryName(code: string) {
+  const historic = historicNames[language()]?.[code];
+  if (historic) return historic;
+  let names = displayNames.get(locale());
+  if (!names) { names = new Intl.DisplayNames([locale()], { type: 'region', fallback: 'none' }); displayNames.set(locale(), names); }
+  try { return names.of(code) || countryNames[code] || code; } catch { return countryNames[code] || code; }
+}
